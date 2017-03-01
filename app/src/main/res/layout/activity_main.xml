@@ -4,11 +4,16 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="alshawi.imagemagic.MainActivity">
+    tools:context="alshawi.imagemagic.MainActivity"
+    xmlns:opencv="http://schemas.android.com/apk/res-auto"
+    >
 
     <org.opencv.android.JavaCameraView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/java_camera_view"/>
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/java_camera_view"
+        android:visibility="gone"
+        opencv:show_fps="true"
+        />
 
 </RelativeLayout>
