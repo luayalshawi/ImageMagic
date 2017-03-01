@@ -9,11 +9,20 @@
     >
 
     <org.opencv.android.JavaCameraView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/java_camera_view"
         android:visibility="gone"
         opencv:show_fps="true"
         />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        opencv:srcCompat="@android:drawable/ic_menu_camera"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/imageButton"
+        android:visibility="visible" />
 
 </RelativeLayout>
