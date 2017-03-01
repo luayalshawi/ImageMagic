@@ -1,18 +1,22 @@
 package alshawi.imagemagic;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
@@ -20,9 +24,13 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2{
     private static String TAG = "MainActivity";
-    private JavaCameraView javaCameraView;
+    private CameraView javaCameraView;
     private Mat mRgba,imgGray,mRgbaT,mRgbaF;
     private BaseLoaderCallback mLoaderCallBack = new BaseLoaderCallback(this) {
         @Override
@@ -49,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         super.onCreate(savedInstanceState);
 //        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_main);
-        javaCameraView = (JavaCameraView) findViewById(R.id.java_camera_view);
+        javaCameraView = (CameraView) findViewById(R.id.java_camera_view);
         javaCameraView.setVisibility(SurfaceView.VISIBLE);
         javaCameraView.setCvCameraViewListener(this);
         javaCameraView.disableFpsMeter();
@@ -109,15 +117,28 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
-        //convert rgb to gray
-        //Imgproc.cvtColor(mRgba,imgGray, Imgproc.COLOR_RGB2GRAY);
-        int rotation =  getWindowManager().getDefaultDisplay().getRotation();
-        if(rotation == 0)
-        {
-            Core.transpose(mRgba, mRgbaT);
-            Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0,0, 0);
-            Core.flip(mRgbaF, mRgba, 1 );
-        }
         return mRgba;
+    }
+
+    public void onImageCapture(View v)
+    {
+        Log.d(TAG,"Click on the Image");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        String currentDateandTime = dateFormat.format(new Date());
+
+        //image full path with extension
+        String fileName = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getPath()+currentDateandTime + ".jpg";
+        javaCameraView.takePicture(fileName);
+
+        //Make image accessible to all applications by adding the image to media gallery
+        Intent mediaScanIntent = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE");
+        File f = new File(fileName);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+
+
+        Toast.makeText(this, "Image saved!", Toast.LENGTH_SHORT).show();
     }
 }
