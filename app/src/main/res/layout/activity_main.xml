@@ -8,7 +8,7 @@
     xmlns:opencv="http://schemas.android.com/apk/res-auto"
     >
 
-    <org.opencv.android.JavaCameraView
+    <alshawi.imagemagic.CameraView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/java_camera_view"
@@ -20,9 +20,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         opencv:srcCompat="@android:drawable/ic_menu_camera"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:id="@+id/imageButton"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:onClick="onImageCapture"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:rotation="-90" />
+
 
 </RelativeLayout>
